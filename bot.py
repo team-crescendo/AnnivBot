@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(Bot["Name"])
 
 # Define bot
-client = commands.Bot(command_prefix=Bot["Prefix"])
+client = commands.Bot(command_prefix=Bot["Prefix"] + " ")
 client.name = Bot["Name"]
 client.conf_event = Event
 
@@ -35,7 +35,11 @@ for cog in cogs:
         logger.warning("Error {} was occured when loading cog extension '{}'\n{}".format(
             ex.__class__.__name__, cog, traceback.format_exc()
             ))
+
 logger.info("Loaded {} extensions".format(len(client.extensions)))
+logger.info("Loaded {} commands: {}".format(
+    len(client.commands), [x.name for x in client.commands]
+    ))
 
 
 client.run(Bot["Token"])
