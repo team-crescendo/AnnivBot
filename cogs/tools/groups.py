@@ -5,6 +5,31 @@ class PermissionGroup:
     name = ""
     rank = ""
 
+    # lt, le, gt, ge is reversed for rank concept
+    @classmethod
+    def __lt__(cls, other):
+        return cls.rank > other.rank
+
+    @classmethod
+    def __le__(cls, other):
+        return cls.rank >= other.rank
+
+    @classmethod
+    def __gt__(cls, other):
+        return cls.rank < other.rank
+
+    @classmethod
+    def __ge__(cls, other):
+        return cls.rank <= other.rank
+
+    @classmethod
+    def __eq__(cls, other):
+        return cls.rank == other.rank
+
+    @classmethod
+    def __ne__(cls, other):
+        return cls.rank != other.rank
+
 
 class Owner(PermissionGroup):
     name = "Owner"

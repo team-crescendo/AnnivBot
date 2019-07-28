@@ -31,11 +31,22 @@ class AdminTools(Cog):
                 ))
 
     @_grp_admin_permissions.command(name="보기")
-    async def view_permission(self, ctx):
-        """자신의 권한을 확인합니다."""
+    async def view_permission(self, ctx, *, member: Member = None):
+        """자신의 권한을 확인합니다. 만약 다른 사람을 언급하면, 그 사람의 권한을 확인합니다.
+        필요한 권한: TeamCrescendo(타인의 권한 확인) or User(본인의 권한 확인)"""
         permission = await self.determine_permission(ctx.author)
-        embed = Embed(title="{}의 권한".format(ctx.author))
+        if member and permission() < TeamCrescendo():
+            await ctx.send(ctx.author.mention + " 당신은 타인을 조회할 권한이 없습니다. (당신: {} < 필요: {})".format(
+                permission.name, TeamCrescendo.name
+                ))
+            return
+
+        member = member or ctx.author
+        permission = await self.determine_permission(member)
+
+        embed = Embed(title="{}의 권한".format(member))
         embed.add_field(name="권한", value=permission.name)
+        embed.set_thumbnail(url=member.avatar_url)
 
         await ctx.send(embed=embed)
 
