@@ -23,7 +23,7 @@ client.conf_event = Event
 # Register cog extensions
 cogs = [
     "cogs.logger",
-    "cogs.Permission"
+    "cogs.admin"
     ]
 
 logger.info("Loading {} extensions".format(len(cogs)))

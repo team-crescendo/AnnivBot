@@ -2,7 +2,7 @@ from discord.ext.commands import Bot, Cog, command, group
 import logging
 
 
-class Permission(Cog):
+class AdminTools(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
         self.logger = logging.getLogger("{}.{}".format(
@@ -14,4 +14,4 @@ class Permission(Cog):
 
 
 def setup(bot: Bot):
-    bot.add_cog(Permission(bot))
+    bot.add_cog(AdminTools(bot))
