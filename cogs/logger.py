@@ -11,7 +11,9 @@ class Logger(Cog):
 
     @Cog.listener()
     async def on_ready(self):
-        self.logger.info("Bot Initialized with Account '{}'(#{})".format(self.bot.user, self.bot.user.id))
+        self.logger.info("====== Bot info ======")
+        self.logger.info("== Prefix: {} ".format(self.bot.command_prefix))
+        self.logger.info("== User: {}(#{}) ".format(self.bot.user, self.bot.user.id))
 
 
 def setup(bot: Bot):
