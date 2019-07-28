@@ -9,6 +9,7 @@ import traceback
 conf = ConfigParser()
 conf.read("settings.ini", encoding="UTF-8")
 Bot = conf["Bot"]
+Event = conf["Event"]
 
 # Load logger
 logging.basicConfig(level=logging.INFO)
@@ -17,10 +18,12 @@ logger = logging.getLogger(Bot["Name"])
 # Define bot
 client = commands.Bot(command_prefix=Bot["Prefix"])
 client.name = Bot["Name"]
+client.conf_event = Event
 
 # Register cog extensions
 cogs = [
-    "cogs.logger"
+    "cogs.logger",
+    "cogs.Permission"
     ]
 
 logger.info("Loading {} extensions".format(len(cogs)))
