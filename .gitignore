@@ -1,0 +1,11 @@
+# IDE files
+.idea
+.vscode
+.*
+
+# Python caches
+*.pyc
+__pycache__
+
+# Settings files
+*.json
