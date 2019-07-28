@@ -1,4 +1,4 @@
-from discord import Game
+from discord import Game, Message
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command, group
 import logging
@@ -22,8 +22,19 @@ class Logger(Cog):
         self.logger.info("====== Bot info ======")
         self.logger.info("== Prefix: {} ".format(self.bot.command_prefix))
         self.logger.info("== User: {}(#{}) ".format(self.bot.user, self.bot.user.id))
+        self.logger.info("== Owner: {owner}(#{owner.id}) ".format(owner=(await self.bot.application_info()).owner))
 
-        self.update_presence.start()
+        # self.update_presence.start()
+
+    @Cog.listener()
+    async def on_message(self, msg: Message):
+        self.logger.info(
+            f"Guild: {msg.guild.name} | Channel: {msg.channel.name} | User: {msg.author.name} | Message: {msg.content}"
+            )
+
+    @command(name="test")
+    async def test(self, ctx):
+        await ctx.send("Yeah")
 
     @tasks.loop(seconds=5.0)
     async def update_presence(self):

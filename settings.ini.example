@@ -4,7 +4,7 @@ Prefix = "크센아 "
 Name = AnnivBot
 
 [Event]
-Admin_roles = 
+Admin_roles =
 Accept_channels =
 Target_channels =
 Target_role =
