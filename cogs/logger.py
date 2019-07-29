@@ -29,7 +29,7 @@ class Logger(Cog):
                              )
                          )
 
-        # self.update_presence.start()
+        self.update_presence.start()
 
     @Cog.listener()
     async def on_message(self, msg: Message):
