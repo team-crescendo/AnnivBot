@@ -1,5 +1,6 @@
+from bot import AnnivBot as Bot
 from discord import Member, Embed
-from discord.ext.commands import Bot, Cog, Context, command, group
+from discord.ext.commands import Cog, Context, command, group
 from .tools.groups import *
 import logging
 
@@ -54,7 +55,7 @@ class AdminTools(Cog):
         if user.id == (await self.bot.application_info()).owner.id:
             return Owner
 
-        if {x.id for x in user.roles} & {int(x) for x in self.conf["admin_roles"].split(",")}:
+        if {x.id for x in user.roles} & {*self.conf["admin_roles"]}:
             return TeamCrescendo
 
         return User

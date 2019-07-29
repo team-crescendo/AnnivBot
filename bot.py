@@ -14,9 +14,14 @@ class AnnivBot(Bot):
 
         self._a_event = self.conf.get("Event", {})
 
-        self.whitelist = {
+        self._whitelist = {
             "channels": self._a_bot.get("whitelist_channels", []),
             "guilds": self._a_bot.get("whitelist_guilds", []),
+            }
+
+        self.whitelist = {
+            "channels": [],
+            "guilds": [],
             }
 
         super().__init__(command_prefix=self._a_command_prefix)
@@ -38,3 +43,25 @@ class AnnivBot(Bot):
 
     def kick(self):
         self.run(self._a_token)
+
+    async def on_ready(self):
+        if not isinstance(self._whitelist["guilds"], list):
+            self._whitelist["guilds"] = [self._whitelist["guilds"]]
+
+        if not isinstance(self._whitelist["channels"], list):
+            self._whitelist["channels"] = [self._whitelist["channels"]]
+
+        for g in self._whitelist["guilds"]:
+            guild = self.get_guild(g)
+            if guild:
+                self.whitelist["guilds"].append(guild)
+
+        for c in self._whitelist["channels"]:
+            channel = self.get_channel(c)
+            if channel:
+                self.whitelist["channels"].append(channel)
+
+    async def on_message(self, message):
+        if message.guild.id in self._whitelist["guilds"] or \
+                message.channel.id in self._whitelist["channels"]:
+            await self.process_commands(message)

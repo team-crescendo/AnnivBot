@@ -1,6 +1,7 @@
+from bot import AnnivBot as Bot
 from discord import Game, Message
 from discord.ext import tasks
-from discord.ext.commands import Bot, Cog, command, group
+from discord.ext.commands import Cog, command, group
 import logging
 
 
@@ -19,10 +20,14 @@ class Logger(Cog):
 
     @Cog.listener()
     async def on_ready(self):
-        self.logger.info("====== Bot info ======")
-        self.logger.info("== Prefix: {} ".format(self.bot.command_prefix))
-        self.logger.info("== User: {}(#{}) ".format(self.bot.user, self.bot.user.id))
-        self.logger.info("== Owner: {owner}(#{owner.id}) ".format(owner=(await self.bot.application_info()).owner))
+        self.logger.info("====== Bot info ======\n" +
+                         "== Prefix: {}\n".format(self.bot.command_prefix) +
+                         "== User: {}(#{})\n".format(self.bot.user, self.bot.user.id) +
+                         "== Owner: {owner}(#{owner.id})\n".format(owner=(await self.bot.application_info()).owner)+
+                         "== Whitelist Channels: {}\n".format(
+                             ", ".join("{c}(#{c})".format(c=channel) for channel in self.bot.whitelist["channels"])
+                             )
+                         )
 
         # self.update_presence.start()
 

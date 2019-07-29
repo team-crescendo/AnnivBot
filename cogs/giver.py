@@ -1,5 +1,6 @@
+from bot import AnnivBot as Bot
 from discord import Message
-from discord.ext.commands import Bot, Cog
+from discord.ext.commands import Cog
 import logging
 
 
@@ -12,7 +13,7 @@ class Giver(Cog):
 
         self.conf = getattr(self.bot, "conf_event") or {}
 
-        self._target_channels = [int(x) for x in self.conf.get("target_channels", "").split(",") if x]
+        self._target_channels = self.conf.get("target_channels")
         self.target_channels = []
 
         self._give_role = int(self.conf.get("target_role") or 0)
@@ -20,6 +21,9 @@ class Giver(Cog):
 
     @Cog.listener()
     async def on_ready(self):
+        if not isinstance(self._target_channels, list):
+            self._target_channels = [self._target_channels]
+
         for c in self._target_channels:
             channel = self.bot.get_channel(c)
             if channel:
