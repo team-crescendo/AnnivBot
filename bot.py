@@ -18,6 +18,7 @@ logger = logging.getLogger(Bot["Name"])
 # Define bot
 client = commands.Bot(command_prefix=Bot["Prefix"] + " ")
 client.name = Bot["Name"]
+client.conf_bot = Bot
 client.conf_event = Event
 
 # Register cog extensions
