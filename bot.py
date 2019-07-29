@@ -1,47 +1,40 @@
-from discord.ext import commands
-from discord.ext.commands import ExtensionError
-from configparser import ConfigParser
-import logging
-import traceback
+from discord.ext.commands import Bot
+from settings import Setting
 
 
-# Load configuration
-conf = ConfigParser()
-conf.read("settings.ini", encoding="UTF-8")
-Bot = conf["Bot"]
-Event = conf["Event"]
+class AnnivBot(Bot):
+    def __init__(self, conf: Setting):
+        self.conf = conf.conf
 
-# Load logger
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(Bot["Name"])
+        self._a_bot = self.conf.get("Bot", {})
+        self._a_token = self._a_bot.get("token")
+        self._a_name = self._a_bot.get("name", self.__class__.__name__)
+        self._a_command_prefix = self._a_bot.get("prefix", ";")
+        self._a_command_prefix += " " if self._a_command_prefix[-1] != " " else ""
 
-# Define bot
-client = commands.Bot(command_prefix=Bot["Prefix"] + " ")
-client.name = Bot["Name"]
-client.conf_bot = Bot
-client.conf_event = Event
+        self._a_event = self.conf.get("Event", {})
 
-# Register cog extensions
-cogs = [
-    "cogs.logger",
-    "cogs.admin",
-    "cogs.giver",
-    ]
+        self.whitelist = {
+            "channels": self._a_bot.get("whitelist_channels", []),
+            "guilds": self._a_bot.get("whitelist_guilds", []),
+            }
 
-logger.info("Loading {} extensions".format(len(cogs)))
-for cog in cogs:
-    try:
-        client.load_extension(cog)
+        super().__init__(command_prefix=self._a_command_prefix)
 
-    except ExtensionError as ex:
-        logger.warning("Error {} was occured when loading cog extension '{}'\n{}".format(
-            ex.__class__.__name__, cog, traceback.format_exc()
-            ))
+    # Property for prior structure support (Rewriting)
+    @property
+    def conf_bot(self):
+        return self._a_bot
 
-logger.info("Loaded {} extensions".format(len(client.extensions)))
-logger.info("Loaded {} commands: {}".format(
-    len(client.commands), [x.name for x in client.commands]
-    ))
+    # Property for prior structure support (Rewriting)
+    @property
+    def conf_event(self):
+        return self._a_event
 
+    # Property for prior structure support (Rewriting)
+    @property
+    def name(self):
+        return self._a_name
 
-client.run(Bot["Token"])
+    def kick(self):
+        self.run(self._a_token)
