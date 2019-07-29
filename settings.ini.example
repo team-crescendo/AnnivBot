@@ -2,6 +2,8 @@
 Token = Bot token here
 Prefix = 크센아
 Name = AnnivBot
+Whiltelist_guilds =
+Whitelist_channels =
 
 [Event]
 Admin_roles =
