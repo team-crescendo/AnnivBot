@@ -37,6 +37,9 @@ class Setting(object):
             if "," in inp:
                 return [cls._parse_any(x.strip()) for x in inp.split(",")]
 
+            if inp.isnumeric():
+                return int(inp)
+
             if cls.is_numeric(inp):
                 return cls._parse_any(float(inp))
 
