@@ -1,6 +1,6 @@
 [Bot]
 Token = Bot token here
-Prefix = "크센아 "
+Prefix = 크센아
 Name = AnnivBot
 
 [Event]
