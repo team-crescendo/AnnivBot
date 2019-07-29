@@ -1,7 +1,11 @@
 from bot import AnnivBot as Bot
-from discord import Member, Embed
-from discord.ext.commands import Cog, Context, command, group
+from .tools.check import upper_permission
 from .tools.groups import *
+from discord import Member, Embed
+from discord.ext.commands import Cog, Context, group
+from psutil import boot_time
+from datetime import timedelta, datetime
+from time import time
 import logging
 
 
@@ -60,6 +64,59 @@ class AdminTools(Cog):
 
         return User
 
+    @_grp_admin.group(name="정보")
+    @upper_permission(TeamCrescendo())
+    async def _grp_admin_info(self, ctx):
+        if not ctx.invoked_subcommand:
+            await ctx.send(ctx.author.mention + "\nSub-commands: \n```\n{}```".format(
+                    "\n".join(["{} - {}".format(x.name, x.help) for x in self._grp_admin.commands])
+                ))
+
+    @_grp_admin_info.command(name="조회")
+    async def _grp_admin_info_view(self, ctx):
+        embed = Embed(title="봇 상태")
+        embed.add_field(
+            name="서버 상태",
+            value="\n".join(
+                "**{}**: {}".format(k, v) for k, v in {
+                    "Server Uptime": timedelta(seconds=time() - boot_time()),
+                    "Bot Uptime": datetime.now() - ctx.bot.boot_time,
+                    }.items()
+                ),
+            inline=False
+            )
+        embed.add_field(
+            name="설정 정보",
+            value="__**Bot**__\n\t" + "\n\t".join(
+                "__{}__: {}".format(k, v) for k, v in self.bot.conf_bot.items()
+                ) + "\n\n__**Event**__\n\t" + "\n\t".join(
+                "__{}__: {}".format(k, v) for k, v in self.bot.conf_event.items()
+                ) + "\n\n__**Roles**__\n\t" + "\n\t".join(
+                "__{}__: {}".format(k, v) for k, v in {
+                    "whitelist_guilds": ", ".join("{x.name}(#{x.id})".format(x=x) for x in self.bot.whitelist["guilds"]),
+                    "whitelist_channels": ", ".join("<#{}>".format(x.id)for x in self.bot.whitelist["channels"]),
+                    }.items()
+                ),
+            inline=False
+            )
+        embed.add_field(
+            name="통계",
+            value="\n".join(
+                "**{}**: {}".format(k, v) for k, v in {
+                    "Guilds": len(ctx.bot.guilds),
+                    "Channels": len([*ctx.bot.get_all_channels()]),
+                    "Members (Mutual)": len([*ctx.bot.get_all_members()]),
+                    "Members (Non-Mutual)": len({x.id for x in ctx.bot.get_all_members()}),
+                    }.items()
+                ),
+            inline=False
+            )
+
+        await ctx.send(embed=embed)
+
+    @_grp_admin_info.error
+    async def _grp_admin_info_error(self, ctx, error: GroupPermissionError):
+        await ctx.send(ctx.author.mention + " " + error.make_message())
 
 def setup(bot: Bot):
     bot.add_cog(AdminTools(bot))

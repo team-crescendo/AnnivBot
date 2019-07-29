@@ -1,5 +1,6 @@
 from discord.ext.commands import Bot
 from settings import Setting
+from datetime import datetime
 
 
 class AnnivBot(Bot):
@@ -13,6 +14,8 @@ class AnnivBot(Bot):
         self._a_command_prefix += " " if self._a_command_prefix[-1] != " " else ""
 
         self._a_event = self.conf.get("Event", {})
+
+        self.boot_time = datetime.now()
 
         self._whitelist = {
             "channels": self._a_bot.get("whitelist_channels", []),
