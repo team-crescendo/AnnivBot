@@ -7,6 +7,7 @@ import traceback
 
 # Load configuration
 conf = Setting()
+print(conf.conf)
 
 # Load logger
 logging.basicConfig(level=logging.INFO)
@@ -18,8 +19,7 @@ client = AnnivBot(conf)
 # Register cog extensions
 cogs = [
     "cogs.logger",
-    "cogs.admin",
-    "cogs.giver",
+    "cogs.joingiver",
     ]
 
 logger.info("Loading {} extensions".format(len(cogs)))

@@ -14,6 +14,7 @@ class AnnivBot(Bot):
         self._a_command_prefix += " " if self._a_command_prefix[-1] != " " else ""
 
         self._a_event = self.conf.get("Event", {})
+        self._a_migung = self.conf.get("MigungGame", {})
 
         self.boot_time = datetime.now()
 
@@ -38,6 +39,10 @@ class AnnivBot(Bot):
     @property
     def conf_event(self):
         return self._a_event
+
+    @property
+    def conf_migung(self):
+        return self._a_migung
 
     # Property for prior structure support (Rewriting)
     @property
