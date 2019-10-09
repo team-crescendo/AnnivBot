@@ -64,7 +64,7 @@ class JoinGiver(Cog):
         print(member.guild.id, type(member.guild.id))
         print(self.floors)
         if member.guild.id in self.floors:
-            open("log.csv", "a", encoding="ANSI").write("{},{},{}\n".format(time(), self.floors.index(member.guild.id)+1, member.mention))
+            open("log.csv", "a", encoding="ANSI").write("{},{},{}(#{})\n".format(time(), self.floors.index(member.guild.id)+1, member.name, member.id))
 
 
         if member.guild.id == self.floor_6.server_id:
