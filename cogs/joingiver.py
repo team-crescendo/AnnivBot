@@ -41,7 +41,7 @@ class JoinGiver(Cog):
         self.floor_10 = None
         self.feedback_channel = None
 
-        self.floors = [int(x) for x in self.conf['floors'].split(",")]
+        self.floors = [int(x) for x in self.conf['floors']]
 
     @Cog.listener()
     async def on_ready(self):
