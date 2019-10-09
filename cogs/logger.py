@@ -41,7 +41,7 @@ class Logger(Cog):
     async def test(self, ctx):
         await ctx.send("Yeah")
 
-    @tasks.loop(seconds=5.0)
+    @tasks.loop(seconds=60/5)
     async def update_presence(self):
         msg = self.messages[0]
         self.messages = self.messages[1:] + [msg]
