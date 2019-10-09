@@ -10,3 +10,12 @@ Admin_roles =
 Accept_channels =
 Target_channels =
 Target_role =
+
+[MigungGame]
+floors = 
+6th_role = 
+6th_server = 
+9th_role = 
+9th_server = 
+master_server = 
+feedback_channel = 
