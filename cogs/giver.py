@@ -1,7 +1,10 @@
 from bot import AnnivBot as Bot
-from discord import Message
+from discord import TextChannel, Message
 from discord.ext.commands import Cog
+from string import ascii_letters, digits
+import random
 import logging
+import traceback
 
 
 class Giver(Cog):
@@ -26,7 +29,9 @@ class Giver(Cog):
 
         for c in self._target_channels:
             channel = self.bot.get_channel(c)
+            print("Browsing", c)
             if channel:
+                print("Adding", channel)
                 self.target_channels.append(channel)
 
         for guild in self.bot.guilds:
@@ -43,8 +48,24 @@ class Giver(Cog):
 
     @Cog.listener()
     async def on_message(self, msg: Message):
-        if self.give_role and self.give_role.guild == msg.guild and  msg.channel in self.target_channels:
-            await msg.author.edit(roles={*msg.author.roles} | {self.give_role})
+        try:
+            if self.give_role and self.give_role.guild == msg.guild and \
+                    self.give_role not in msg.author.roles and \
+                    (msg.channel in self.target_channels or msg.channel.id in self._target_channels):
+                await msg.author.edit(roles={*msg.author.roles} | {self.give_role})
+                await msg.add_reaction("⭕")
+        except:
+            try:
+                tb = traceback.format_exc()
+                report_name = "".join(random.choice(ascii_letters + digits) for i in range(8))
+                open(report_name + ".log", "w", encoding="UTF-8").write(tb)
+
+                report_channel: TextChannel = self.bot.get_channel(612249837848756224)
+                await report_channel.send("역할 지급 중 오류 발생 ({})\n```py\n{}\n```".format(report_name, tb))
+                await msg.add_reaction("❌")
+            except:
+                print("Error on message `{},,`({}) from `{}` in `{}({})\n\n=>{}`'".format(
+                    msg.content[:10], msg.id, msg.author.mention, msg.guild.name, msg.channel.id, tb))
 
 
 def setup(bot: Bot):
