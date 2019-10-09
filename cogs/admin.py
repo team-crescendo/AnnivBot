@@ -21,6 +21,7 @@ class AdminTools(Cog):
 
     @group(name="관리")
     async def _grp_admin(self, ctx: Context):
+        """디스코드 봇을 관리하는 커맨드 그룹입니다."""
         if not ctx.invoked_subcommand:
             await ctx.send(ctx.author.mention + "\nSub-commands: \n```\n{}```".format(
                     "\n".join(["{} - {}".format(x.name, x.help) for x in self._grp_admin.commands])
@@ -39,6 +40,7 @@ class AdminTools(Cog):
     async def view_permission(self, ctx, *, member: Member = None):
         """자신의 권한을 확인합니다. 만약 다른 사람을 언급하면, 그 사람의 권한을 확인합니다.
         필요한 권한: TeamCrescendo(타인의 권한 확인) or User(본인의 권한 확인)"""
+
         permission = await self.determine_permission(ctx.author)
         if member and permission() < TeamCrescendo():
             await ctx.send(ctx.author.mention + " 당신은 타인을 조회할 권한이 없습니다. (당신: {} < 필요: {})".format(
@@ -67,6 +69,9 @@ class AdminTools(Cog):
     @_grp_admin.group(name="정보")
     @upper_permission(TeamCrescendo())
     async def _grp_admin_info(self, ctx):
+        """디스코드 봇의 각종 정보를 확인하기 위핸 커맨드그룹입니다.
+        필요한 권한: TeamCrescendo"""
+
         if not ctx.invoked_subcommand:
             await ctx.send(ctx.author.mention + "\nSub-commands: \n```\n{}```".format(
                     "\n".join(["{} - {}".format(x.name, x.help) for x in self._grp_admin.commands])
@@ -74,6 +79,8 @@ class AdminTools(Cog):
 
     @_grp_admin_info.command(name="조회")
     async def _grp_admin_info_view(self, ctx):
+        """봇 및 서버 전반의 정보를 확인합니다."""
+
         embed = Embed(title="봇 상태")
         embed.add_field(
             name="서버 상태",
